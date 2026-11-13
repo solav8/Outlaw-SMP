@@ -14,8 +14,9 @@ npx serve outlaw-smp
 ## What's included
 
 - **Ranks:** Prime ($1) and Outlaw+ ($5), with kit previews, perks, and a 2-key picker. Both include 2 crate keys of the buyer's choice.
-- **Crates:** Normal, Gold, Spawner, Seasonal, Special and Keyall — $2 per key. Each has an in-game reward preview modal.
-- **Cart:** quantities, key selection for ranks, localStorage persistence, live subtotal.
+- **Crates:** Normal, Gold, Spawner, Seasonal and Special — $2 per key. Server Keyall is $4 because it triggers a keyall for the whole server. Each has an in-game reward preview modal.
+- **Discounts:** one code per order. `OUTLAW` gives 25% off the cart total. Applied in the cart, saved in localStorage, and carried into the order text and Discord log.
+- **Cart:** quantities, key selection for ranks, localStorage persistence, live subtotal, discount and total.
 - **Checkout:** collects the Minecraft username, copies a formatted order to the clipboard, opens the Discord so the buyer can finish in a ticket, and posts an order log to your Discord webhook. After a successful copy the cart empties and the drawer closes so the same order can't be submitted twice. **No payment is processed on this site.**
 - **Reviews:** real submissions only. Starts empty. Stores reviews in the browser's localStorage in this demo.
 - **Effects:** ember canvas, 3D CSS crates, tilt cards, scroll reveals, custom cursor glow, animated ticker, click sounds (Web Audio, no audio files), reduced-motion support.
@@ -40,7 +41,7 @@ Every checkout posts an embed to the webhook configured in `js/config.js` (`disc
 - Minecraft username
 - Order reference (`OSMP-...`)
 - Items, quantities and chosen crate keys
-- Total
+- Subtotal, discount code/amount (when one is applied) and final total
 - A note that payment is confirmed in a ticket
 
 The buyer also sees the order reference in the success dialog, plus a status line saying whether the log reached Discord.
@@ -78,7 +79,8 @@ Store the real webhook as a secret named `DISCORD_WEBHOOK` in the Worker setting
 2. **Reviews.** The review form saves to `localStorage`, so submissions are only visible in that browser. To collect public reviews, point the form at a backend (Supabase, Firebase, Formspree, a small API, etc.) and render the returned reviews. Do not seed fake reviews — fake customer reviews are deceptive and can get a store banned or fined in many places.
 3. **Discord delivery process.** Make sure staff know what a pasted order looks like. The generated text includes the IGN, each item, chosen keys, and the total.
 4. **Prices / rewards.** Prices and perk text live in `index.html` and the `CRATES` / `RANKS` objects in `js/main.js`. Keep the crate reward descriptions aligned with the in-game menus and current odds.
-5. **Legal.** The footer says the server is not affiliated with Mojang/Microsoft and that crate rewards are randomised. Keep a clear refund/delivery policy in your Discord.
+5. **Discounts.** The `OUTLAW` code is defined in the `DISCOUNTS` object in `js/main.js` (currently 25% off, one code at a time). Because this is a static site, the discount is calculated in the browser and can be bypassed by someone editing the page. Staff should confirm the code and total in the Discord ticket before accepting payment. For single-use codes or per-customer limits, move the calculation to a backend or your payment provider.
+6. **Legal.** The footer says the server is not affiliated with Mojang/Microsoft and that crate rewards are randomised. Keep a clear refund/delivery policy in your Discord.
 
 ## Images
 

@@ -66,14 +66,14 @@
       imageAlt: "Special Crate reward menu"
     },
     keyall: {
-      name: "Keyall",
-      price: 2,
+      name: "Server Keyall",
+      price: 4,
       color: "#52e05a",
       preview: "assets/crate-hall.jpg",
-      blurb: "The community crate. Hype up the lobby and spread the loot.",
-      long: "The community crate. It lives at the end of the crate hall — the green one. Full reward details and current odds are in the Discord.",
+      blurb: "One key for the whole server. Hype up the lobby and spread the loot.",
+      long: "One key triggers a keyall for the entire server — everyone online gets loot. It lives at the end of the crate hall, the green one. $4 per key because the whole lobby eats.",
       wide: true,
-      imageAlt: "The Keyall Crate in the Outlaw SMP crate hall"
+      imageAlt: "The Server Keyall Crate in the Outlaw SMP crate hall"
     }
   };
 
@@ -413,9 +413,29 @@
   if (!Array.isArray(cart)) cart = [];
   cart = cart.filter((item) => item && typeof item === "object" && item.id && item.type && item.price >= 0);
 
+  const DISCOUNT_KEY = "outlaw_discount_v1";
+  const DISCOUNTS = {
+    OUTLAW: { code: "OUTLAW", percent: 25 }
+  };
+  let discountCode = storage.get(DISCOUNT_KEY, "");
+  if (typeof discountCode !== "string" || !getDiscount(discountCode)) discountCode = "";
+
   const cartCountEl = $("#cartCount");
   const cartBody = $("#cartBody");
   const cartTotalEl = $("#cartTotal");
+  const cartSubtotalEl = $("#cartSubtotal");
+  const cartSubtotalRow = $("#cartSubtotalRow");
+  const cartDiscountEl = $("#cartDiscount");
+  const cartDiscountRow = $("#cartDiscountRow");
+  const cartDiscountLabel = $("#cartDiscountLabel");
+  const discountForm = $("#discountForm");
+  const discountInput = $("#discountInput");
+  const discountHint = $("#discountHint");
+  const discountError = $("#discountError");
+  const discountApplied = $("#discountApplied");
+  const discountCodeLabel = $("#discountCodeLabel");
+  const discountPercentLabel = $("#discountPercentLabel");
+  const removeDiscountBtn = $("#removeDiscount");
   const checkoutBtn = $("#checkoutBtn");
   const clearCartBtn = $("#clearCart");
   const cartDrawer = $("#cartDrawer");
@@ -448,6 +468,29 @@
     return cart.reduce((total, item) => total + item.price * item.qty, 0);
   }
 
+  function getDiscount(code) {
+    return Object.prototype.hasOwnProperty.call(DISCOUNTS, code) ? DISCOUNTS[code] : null;
+  }
+
+  function activeDiscount() {
+    return getDiscount(discountCode);
+  }
+
+  function discountAmount() {
+    const offer = activeDiscount();
+    return offer ? Math.round(cartSubtotal() * offer.percent) / 100 : 0;
+  }
+
+  function cartTotal() {
+    return Math.round((cartSubtotal() - discountAmount()) * 100) / 100;
+  }
+
+  function showDiscountError(message) {
+    if (!discountError) return;
+    discountError.textContent = message;
+    discountError.hidden = false;
+  }
+
   function keyNames(item) {
     return (item.keys || []).map((key) => CRATES[key]?.name || key).join(" + ");
   }
@@ -463,10 +506,29 @@
   }
 
   function updateCartTotals() {
+    const offer = activeDiscount();
+    const subtotal = cartSubtotal();
+    const discount = discountAmount();
+
     cartCountEl.textContent = String(cartQuantity());
-    cartTotalEl.textContent = money(cartSubtotal());
+    cartTotalEl.textContent = money(cartTotal());
+    cartSubtotalRow.hidden = !offer;
+    cartSubtotalEl.textContent = money(subtotal);
+    cartDiscountRow.hidden = !offer || discount <= 0;
+    cartDiscountEl.textContent = `−${money(discount)}`;
+    if (offer) cartDiscountLabel.textContent = `${offer.code} · ${offer.percent}% off`;
+
     checkoutBtn.disabled = cart.length === 0;
     clearCartBtn.hidden = cart.length === 0;
+
+    discountForm.hidden = !!offer;
+    discountHint.hidden = !!offer;
+    discountApplied.hidden = !offer;
+    if (offer) {
+      discountCodeLabel.textContent = offer.code;
+      discountPercentLabel.textContent = `−${offer.percent}%`;
+    }
+    discountError.hidden = true;
   }
 
   function toast(message) {
@@ -639,6 +701,7 @@
   function openCart() {
     if (cartIsOpen) return;
     cartIsOpen = true;
+    document.body.classList.add("cart-open");
     cartTrigger = document.activeElement;
     window.clearTimeout(cartCloseTimer);
     renderCart();
@@ -656,6 +719,7 @@
   function closeCart() {
     if (!cartIsOpen) return;
     cartIsOpen = false;
+    document.body.classList.remove("cart-open");
     cartBackdrop.classList.remove("is-open");
     cartDrawer.classList.remove("is-open");
     cartDrawer.setAttribute("aria-hidden", "true");
@@ -717,6 +781,48 @@
     saveCart();
     renderCart();
     toast("Cart cleared.");
+  });
+
+  discountForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!cart.length) {
+      showDiscountError("Add something to your cart first.");
+      sound.play("error");
+      return;
+    }
+
+    const entered = discountInput.value.trim().toUpperCase();
+    if (!entered) {
+      showDiscountError("Enter a code first.");
+      sound.play("error");
+      discountInput.focus();
+      return;
+    }
+
+    const offer = getDiscount(entered);
+    if (!offer) {
+      showDiscountError("That code isn't valid.");
+      sound.play("error");
+      discountInput.select();
+      return;
+    }
+
+    discountCode = entered;
+    storage.set(DISCOUNT_KEY, discountCode);
+    discountInput.value = "";
+    renderCart();
+    toast(`${offer.code} applied — ${offer.percent}% off.`);
+    sound.play("success");
+  });
+
+  removeDiscountBtn.addEventListener("click", () => {
+    if (!activeDiscount()) return;
+    discountCode = "";
+    storage.set(DISCOUNT_KEY, "");
+    renderCart();
+    toast("Discount removed.");
+    sound.play("tick");
+    window.setTimeout(() => discountInput.focus(), 60);
   });
 
   checkoutBtn.addEventListener("click", () => {
@@ -798,9 +904,9 @@
         <h2 id="modalTitle">${crate.name} Crate</h2>
         <p class="modal-sub">${escapeHtml(crate.long)}</p>
         <img class="crate-modal-img${crate.wide ? " wide" : ""}" src="${crate.preview}" alt="${escapeHtml(crate.imageAlt)}" loading="eager">
-        <div class="crate-modal-meta"><i></i> $2 per key · ${crate.wide ? "Crate hall" : "In-game reward menu"}</div>
+        <div class="crate-modal-meta"><i></i> ${money(crate.price)} per key · ${crate.wide ? "Crate hall" : "In-game reward menu"}</div>
         <div class="modal-actions">
-          <button class="btn btn-primary" type="button" data-add-crate="${crateKey}" data-sound="buy">Add ${crate.name} key — $2</button>
+          <button class="btn btn-primary" type="button" data-add-crate="${crateKey}" data-sound="buy">Add ${crate.name} key — ${money(crate.price)}</button>
           <a class="btn btn-ghost" href="${DISCORD}" target="_blank" rel="noopener" data-sound="click">Ask in Discord</a>
         </div>
         <p class="fine">Preview from the in-game crate ${crate.wide ? "hall" : "menu"}. Full reward list and odds are in Discord.</p>
@@ -820,6 +926,7 @@
 
   function buildOrder(username, ref) {
     const divider = "--------------------------------";
+    const offer = activeDiscount();
     const lines = cart.map((item) => {
       let line = `${item.qty}x ${item.name} — ${money(item.price * item.qty)}`;
       if (item.type === "rank") line += `\n   Keys: ${keyNames(item)}`;
@@ -832,7 +939,11 @@
       divider,
       ...lines,
       divider,
-      `TOTAL: ${money(cartSubtotal())}`,
+      ...(offer ? [
+        `SUBTOTAL: ${money(cartSubtotal())}`,
+        `DISCOUNT: ${offer.code} (${offer.percent}% off) -${money(discountAmount())}`
+      ] : []),
+      `TOTAL: ${money(cartTotal())}`,
       "",
       "Please confirm payment and delivery in a Discord ticket.",
       "discord.gg/outlawsmp"
@@ -840,6 +951,7 @@
   }
 
   function buildOrderLog(username, ref) {
+    const offer = activeDiscount();
     const items = cart.map((item) => {
       let line = `${item.qty}× ${item.name} — ${money(item.price * item.qty)}`;
       if (item.type === "rank") line += ` (keys: ${keyNames(item)})`;
@@ -850,12 +962,17 @@
     return {
       username: "Outlaw SMP Orders",
       embeds: [{
-        title: `New order — ${money(cartSubtotal())}`,
+        title: `New order — ${money(cartTotal())}`,
         color: 0xd21f2b,
         fields: [
           { name: "Minecraft username", value: `\`${username}\``, inline: true },
           { name: "Order ref", value: `\`${ref}\``, inline: true },
           { name: "Items", value: itemsValue || "—" },
+          ...(offer ? [
+            { name: "Subtotal", value: money(cartSubtotal()), inline: true },
+            { name: "Discount", value: `${offer.code} · ${offer.percent}% off (−${money(discountAmount())})`, inline: true }
+          ] : []),
+          { name: "Order total", value: money(cartTotal()), inline: true },
           { name: "Payment", value: "Not collected on-site — confirm in a Discord ticket." }
         ],
         timestamp: new Date().toISOString(),
@@ -931,6 +1048,8 @@
 
   function openCheckout() {
     checkoutInFlight = false;
+    const offer = activeDiscount();
+    const discount = discountAmount();
     const lines = cart.map((item) => `
       <div class="checkout-line">
         <span>${item.qty}× ${escapeHtml(item.name)}${item.type === "rank" ? `<small>Keys: ${escapeHtml(keyNames(item))}</small>` : ""}</span>
@@ -943,7 +1062,10 @@
       <p class="modal-sub">Enter your Minecraft username, copy the order and finish it in a Discord ticket. No payment is taken on this site.</p>
       <div class="checkout-summary">
         ${lines}
-        <div class="checkout-total"><span>Total</span><strong>${money(cartSubtotal())}</strong></div>
+        ${offer ? `
+          <div class="checkout-line checkout-subtotal"><span>Subtotal</span><strong>${money(cartSubtotal())}</strong></div>
+          <div class="checkout-line checkout-discount"><span>${escapeHtml(offer.code)} · ${offer.percent}% off</span><strong>−${money(discount)}</strong></div>` : ""}
+        <div class="checkout-total"><span>Total</span><strong>${money(cartTotal())}</strong></div>
       </div>
       <form class="checkout-form" id="checkoutForm" novalidate>
         <label class="field">
