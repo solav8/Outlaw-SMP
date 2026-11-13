@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Outlaw SMP — Ranks &amp; Crates</title>
+  <meta name="description" content="The official Outlaw SMP store. Grab the Prime or Outlaw+ rank, crack any of the six crates for $2 a key, and pull up. Full info in Discord.">
+  <meta name="theme-color" content="#070709">
+  <meta property="og:title" content="Outlaw SMP — Ranks &amp; Crates">
+  <meta property="og:description" content="Ranks from $1. Crates $2 a key. Survive. Grind. Rule.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/hero-crates.jpg">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+  <div class="scroll-progress" aria-hidden="true"><span id="scrollBar"></span></div>
+
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="Outlaw SMP home" data-sound="click">
+        <img src="assets/logo.png" alt="Outlaw SMP" width="1100" height="621">
+      </a>
+
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#ranks" data-sound="tick">Ranks</a>
+        <a href="#crates" data-sound="tick">Crates</a>
+        <a href="#world" data-sound="tick">The SMP</a>
+        <a href="#reviews" data-sound="tick">Reviews</a>
+        <a href="#faq" data-sound="tick">FAQ</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="sound-btn" id="soundToggle" type="button" aria-pressed="true" aria-label="Toggle sound effects" title="Toggle sound">
+          <svg class="sound-icon sound-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.2L12 18V6L7.2 9.5H4Z"/><path d="M15.4 8.6a4.8 4.8 0 0 1 0 6.8M18 6a8.4 8.4 0 0 1 0 12"/></svg>
+          <svg class="sound-icon sound-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.2L12 18V6L7.2 9.5H4Z"/><path d="m16 9 5 6m0-6-5 6"/></svg>
+        </button>
+
+        <a class="btn btn-discord btn-sm header-discord" href="https://discord.gg/outlawsmp" target="_blank" rel="noopener" data-sound="click">
+          <svg class="discord-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.3 5.4A16.7 16.7 0 0 0 15.2 4l-.5 1a15.4 15.4 0 0 0-5.4 0L8.8 4a16.7 16.7 0 0 0-4.1 1.4C2.1 9 1.4 12.5 1.7 16c1.7 1.3 3.4 2 5 2.4l1.1-1.7a10.8 10.8 0 0 1-1.7-.8l.4-.3a11.7 11.7 0 0 0 11 0l.4.3c-.5.3-1.1.6-1.7.8l1.1 1.7c1.6-.4 3.3-1.1 5-2.4.4-4.1-.7-7.6-3-10.6ZM8.7 13.8c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Zm6.6 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Z"/></svg>
+          Discord
+        </a>
+
+        <button class="cart-btn" id="cartOpen" type="button" aria-label="Open cart" data-sound="click">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+
+        <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- HERO -->
+    <section class="hero" id="top">
+      <div class="hero-bg" aria-hidden="true">
+        <img src="assets/hero-crates.jpg" alt="" width="1800" height="944">
+      </div>
+      <div class="hero-shade" aria-hidden="true"></div>
+      <div class="hero-grid" aria-hidden="true"></div>
+      <canvas id="embers" aria-hidden="true"></canvas>
+
+      <div class="container hero-inner">
+        <div class="hero-copy reveal">
+          <div class="eyebrow"><span class="pulse-dot"></span> Outlaw SMP <span class="slash">/</span> Survival Store</div>
+          <h1 class="sr-only">Outlaw SMP — Ranks &amp; Crates</h1>
+          <img class="hero-logo" src="assets/logo.png" alt="Outlaw SMP" width="1100" height="621">
+          <p class="hero-sub">Survive the grind. Stack your loot. <em>Rule the frontier.</em></p>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#ranks" data-sound="click">Shop ranks <span class="arrow" aria-hidden="true">→</span></a>
+            <a class="btn btn-ghost" href="#crates" data-sound="click">Crack crates</a>
+          </div>
+          <div class="hero-meta">
+            <span class="hero-pill">Prime — $1</span>
+            <span class="hero-pill">Outlaw+ — $5</span>
+            <span class="hero-pill">Every crate — $2</span>
+          </div>
+        </div>
+
+        <aside class="hero-card reveal" data-tilt>
+          <div class="hero-card-glow" aria-hidden="true"></div>
+          <div class="hero-card-top">
+            <span class="tag">Most popular</span>
+            <span class="hero-price"><small>$</small>5</span>
+          </div>
+          <div class="hero-kit-wrap">
+            <img src="assets/kit-outlaw.png" alt="Outlaw+ kit preview" class="hero-kit" width="572" height="387">
+            <span class="hero-kit-label">Outlaw+ kit</span>
+          </div>
+          <div class="hero-card-body">
+            <div class="hero-rank">OUTLAW<span>+</span></div>
+            <p>Full kit, Insta RTP, Insta Home, Insta Spawn, $300k cash, 1,000 points + 2 keys.</p>
+            <button class="btn btn-primary btn-block" type="button" data-add-rank="outlaw" data-sound="buy">
+              Add Outlaw+ — $5
+            </button>
+            <span class="hero-fine">2 crate keys of your choice included</span>
+          </div>
+        </aside>
+      </div>
+
+      <div class="hero-scroll" aria-hidden="true"><span>Scroll</span><i></i></div>
+    </section>
+
+    <!-- TICKER -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span><b>OUTLAW SMP</b> <i>◆</i> PRIME $1 <i>◆</i> OUTLAW+ $5 <i>◆</i> ALL CRATES $2 <i>◆</i> 2 KEYS WITH EVERY RANK <i>◆</i> <b>DISCORD.GG/OUTLAWSMP</b> <i>◆</i></span>
+        <span><b>OUTLAW SMP</b> <i>◆</i> PRIME $1 <i>◆</i> OUTLAW+ $5 <i>◆</i> ALL CRATES $2 <i>◆</i> 2 KEYS WITH EVERY RANK <i>◆</i> <b>DISCORD.GG/OUTLAWSMP</b> <i>◆</i></span>
+      </div>
+    </div>
+
+    <!-- VALUE STRIP -->
+    <section class="value-strip">
+      <div class="container value-grid">
+        <div><strong>2</strong><span>ranks</span></div>
+        <div><strong>6</strong><span>crates</span></div>
+        <div><strong>$2</strong><span>per key</span></div>
+        <div><strong>2</strong><span>keys with every rank</span></div>
+      </div>
+    </section>
+
+    <!-- RANKS -->
+    <section class="section ranks" id="ranks">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="kicker">01 — Ranks</div>
+            <h2>Pick your <span class="red">side.</span></h2>
+          </div>
+          <p>Both ranks come loaded: a full kit, instant travel perks, in-game cash, points and two crate keys of your choice.</p>
+        </div>
+
+        <div class="rank-grid">
+          <!-- PRIME -->
+          <article class="rank-card reveal" data-tilt>
+            <div class="rank-head">
+              <div>
+                <span class="rank-label">Starter</span>
+                <h3>Prime</h3>
+              </div>
+              <div class="price"><span class="currency">$</span><span class="amount">1</span></div>
+            </div>
+
+            <figure class="kit-frame">
+              <img src="assets/kit-prime.png" alt="Prime kit preview — enchanted diamond armour, sword, tools, golden apples and potions" width="574" height="396" loading="lazy">
+              <figcaption>Prime kit · in-game preview</figcaption>
+              <button class="zoom-btn" type="button" data-lightbox="assets/kit-prime.png" data-lightbox-title="Prime kit" data-sound="click" aria-label="View the Prime kit larger">+</button>
+            </figure>
+
+            <ul class="perk-list">
+              <li>Prime kit</li>
+              <li>Insta RTP</li>
+              <li>Insta Home</li>
+              <li>Insta Spawn</li>
+              <li><strong>$50,000</strong> in-game cash</li>
+              <li><strong>100</strong> points</li>
+              <li class="perk-keys">2 crate keys of your choice</li>
+            </ul>
+
+            <div class="key-picker" data-key-picker="prime">
+              <div class="key-picker-head"><span>Choose your 2 keys</span><span class="key-count">2/2</span></div>
+              <div class="key-chips">
+                <button class="key-chip is-on" type="button" data-key="normal" style="--dot:#22d3c5" aria-pressed="true" data-sound="tick">Normal</button>
+                <button class="key-chip is-on" type="button" data-key="gold" style="--dot:#f5c84c" aria-pressed="true" data-sound="tick">Gold</button>
+                <button class="key-chip" type="button" data-key="seasonal" style="--dot:#ff8a2a" aria-pressed="false" data-sound="tick">Seasonal</button>
+                <button class="key-chip" type="button" data-key="special" style="--dot:#3aa0ff" aria-pressed="false" data-sound="tick">Special</button>
+                <button class="key-chip" type="button" data-key="spawner" style="--dot:#8094a8" aria-pressed="false" data-sound="tick">Spawner</button>
+                <button class="key-chip" type="button" data-key="keyall" style="--dot:#52e05a" aria-pressed="false" data-sound="tick">Keyall</button>
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-block" type="button" data-add-rank="prime" data-sound="buy">Add Prime — $1</button>
+            <p class="fine">One-time purchase. Includes the 2 keys selected above — change them in the cart.</p>
+          </article>
+
+          <!-- OUTLAW+ -->
+          <article class="rank-card featured reveal" data-tilt>
+            <span class="rank-flag">Most popular</span>
+            <div class="rank-head">
+              <div>
+                <span class="rank-label">Best value</span>
+                <h3>Outlaw<span class="red">+</span></h3>
+              </div>
+              <div class="price"><span class="currency">$</span><span class="amount">5</span></div>
+            </div>
+
+            <figure class="kit-frame">
+              <img src="assets/kit-outlaw.png" alt="Outlaw+ kit preview — netherite armour, enchanted golden apples, potions, pearls and tools" width="572" height="387" loading="lazy">
+              <figcaption>Outlaw+ kit · in-game preview</figcaption>
+              <button class="zoom-btn" type="button" data-lightbox="assets/kit-outlaw.png" data-lightbox-title="Outlaw+ kit" data-sound="click" aria-label="View the Outlaw+ kit larger">+</button>
+            </figure>
+
+            <ul class="perk-list">
+              <li>Outlaw+ kit</li>
+              <li>Insta RTP</li>
+              <li>Insta Home</li>
+              <li>Insta Spawn</li>
+              <li><strong>$300,000</strong> in-game cash</li>
+              <li><strong>1,000</strong> points</li>
+              <li class="perk-keys">2 crate keys of your choice</li>
+            </ul>
+
+            <div class="key-picker" data-key-picker="outlaw">
+              <div class="key-picker-head"><span>Choose your 2 keys</span><span class="key-count">2/2</span></div>
+              <div class="key-chips">
+                <button class="key-chip is-on" type="button" data-key="normal" style="--dot:#22d3c5" aria-pressed="true" data-sound="tick">Normal</button>
+                <button class="key-chip is-on" type="button" data-key="gold" style="--dot:#f5c84c" aria-pressed="true" data-sound="tick">Gold</button>
+                <button class="key-chip" type="button" data-key="seasonal" style="--dot:#ff8a2a" aria-pressed="false" data-sound="tick">Seasonal</button>
+                <button class="key-chip" type="button" data-key="special" style="--dot:#3aa0ff" aria-pressed="false" data-sound="tick">Special</button>
+                <button class="key-chip" type="button" data-key="spawner" style="--dot:#8094a8" aria-pressed="false" data-sound="tick">Spawner</button>
+                <button class="key-chip" type="button" data-key="keyall" style="--dot:#52e05a" aria-pressed="false" data-sound="tick">Keyall</button>
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-block" type="button" data-add-rank="outlaw" data-sound="buy">Add Outlaw+ — $5</button>
+            <p class="fine">One-time purchase. Includes the 2 keys selected above — change them in the cart.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORLD / GALLERY -->
+    <section class="world" id="world">
+      <div class="world-bg" aria-hidden="true"><img src="assets/skull-mountain.jpg" alt="" width="1600" height="842" loading="lazy"></div>
+      <div class="world-overlay" aria-hidden="true"></div>
+      <div class="container world-inner">
+        <div class="world-copy reveal">
+          <div class="kicker">02 — The SMP</div>
+          <h2>Built different.<br><span class="red">Played lawless.</span></h2>
+          <p>Outlaw SMP is a survival server with a serious case of main-character energy. Big builds, grindy nights, crate hall flexes and a Discord full of people who probably should have logged off two hours ago.</p>
+          <p>No clue where to start? Join the Discord, say hi, and ask for the tour. Someone will point you at the spawn portal.</p>
+          <a class="btn btn-ghost" href="https://discord.gg/outlawsmp" target="_blank" rel="noopener" data-sound="click">Join the Discord <span class="arrow" aria-hidden="true">↗</span></a>
+        </div>
+
+        <div class="gallery reveal">
+          <figure class="g-item g1">
+            <img src="assets/skull-mountain.jpg" alt="The giant skull build at Outlaw SMP spawn" loading="lazy">
+            <figcaption><span>Spawn</span><small>The skull</small></figcaption>
+          </figure>
+          <figure class="g-item g2">
+            <img src="assets/afk-zone.jpg" alt="The AFK zone on Outlaw SMP" loading="lazy">
+            <figcaption><span>AFK zone</span><small>Touch grass later</small></figcaption>
+          </figure>
+          <figure class="g-item g3">
+            <img src="assets/crate-hall.jpg" alt="The Outlaw SMP crate hall" loading="lazy">
+            <figcaption><span>Crate hall</span><small>Where the magic happens</small></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- CRATES -->
+    <section class="section crates" id="crates">
+      <div class="crate-bg" aria-hidden="true"><img src="assets/crate-hall.jpg" alt="" loading="lazy"></div>
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="kicker">03 — Crates</div>
+            <h2>Crack a <span class="red">crate.</span></h2>
+          </div>
+          <div class="price-stamp"><span>$2</span><small>every key · every crate</small></div>
+        </div>
+
+        <div class="crate-grid">
+          <article class="crate-card reveal" data-tilt style="--crate:#22d3c5;--crate-deep:#0a5f5a">
+            <div class="crate-visual">
+              <span class="crate-num">01</span>
+              <div class="cube-stage"><div class="cube-bob"><div class="cube">
+                <span class="face front"></span><span class="face back"></span><span class="face right"></span>
+                <span class="face left"></span><span class="face top"></span><span class="face bottom"></span>
+              </div></div></div>
+            </div>
+            <div class="crate-body">
+              <div class="crate-title-row"><h3>Normal</h3><span class="crate-price">$2</span></div>
+              <p>Enchanted gear, sword, pickaxe, axe, shovel and the essentials to get moving.</p>
+              <div class="crate-actions">
+                <button class="btn btn-primary btn-sm" type="button" data-add-crate="normal" data-sound="buy">Add key</button>
+                <button class="link-btn" type="button" data-preview="normal" data-sound="click">Preview <span aria-hidden="true">↗</span></button>
+              </div>
+            </div>
+          </article>
+
+          <article class="crate-card reveal" data-tilt style="--crate:#f5c84c;--crate-deep:#7a5200">
+            <div class="crate-visual">
+              <span class="crate-num">02</span>
+              <div class="cube-stage"><div class="cube-bob"><div class="cube">
+                <span class="face front"></span><span class="face back"></span><span class="face right"></span>
+                <span class="face left"></span><span class="face top"></span><span class="face bottom"></span>
+              </div></div></div>
+            </div>
+            <div class="crate-body">
+              <div class="crate-title-row"><h3>Gold</h3><span class="crate-price">$2</span></div>
+              <p>Full gear set, tools and bonus loot. A little extra shine in every key.</p>
+              <div class="crate-actions">
+                <button class="btn btn-primary btn-sm" type="button" data-add-crate="gold" data-sound="buy">Add key</button>
+                <button class="link-btn" type="button" data-preview="gold" data-sound="click">Preview <span aria-hidden="true">↗</span></button>
+              </div>
+            </div>
+          </article>
+
+          <article class="crate-card reveal" data-tilt style="--crate:#8094a8;--crate-deep:#2a3542">
+            <div class="crate-visual">
+              <span class="crate-num">03</span>
+              <div class="cube-stage"><div class="cube-bob"><div class="cube">
+                <span class="face front"></span><span class="face back"></span><span class="face right"></span>
+                <span class="face left"></span><span class="face top"></span><span class="face bottom"></span>
+              </div></div></div>
+            </div>
+            <div class="crate-body">
+              <div class="crate-title-row"><h3>Spawner</h3><span class="crate-price">$2</span></div>
+              <p>Seven spawners. Build the farm. Ruin your sleep schedule.</p>
+              <div class="crate-actions">
+                <button class="btn btn-primary btn-sm" type="button" data-add-crate="spawner" data-sound="buy">Add key</button>
+                <button class="link-btn" type="button" data-preview="spawner" data-sound="click">Preview <span aria-hidden="true">↗</span></button>
+              </div>
+            </div>
+          </article>
+
+          <article class="crate-card reveal" data-tilt style="--crate:#ff8a2a;--crate-deep:#7a3200">
+            <div class="crate-visual">
+              <span class="crate-num">04</span>
+              <div class="cube-stage"><div class="cube-bob"><div class="cube">
+                <span class="face front"></span><span class="face back"></span><span class="face right"></span>
+                <span class="face left"></span><span class="face top"></span><span class="face bottom"></span>
+              </div></div></div>
+            </div>
+            <div class="crate-body">
+              <div class="crate-title-row"><h3>Seasonal</h3><span class="crate-price">$2</span></div>
+              <p>Seasonal armour set, tools and bonus loot while the season lasts.</p>
+              <div class="crate-actions">
+                <button class="btn btn-primary btn-sm" type="button" data-add-crate="seasonal" data-sound="buy">Add key</button>
+                <button class="link-btn" type="button" data-preview="seasonal" data-sound="click">Preview <span aria-hidden="true">↗</span></button>
+              </div>
+            </div>
+          </article>
+
+          <article class="crate-card reveal" data-tilt style="--crate:#3aa0ff;--crate-deep:#0c4d8a">
+            <div class="crate-visual">
+              <span class="crate-num">05</span>
+              <div class="cube-stage"><div class="cube-bob"><div class="cube">
+                <span class="face front"></span><span class="face back"></span><span class="face right"></span>
+                <span class="face left"></span><span class="face top"></span><span class="face bottom"></span>
+              </div></div></div>
+            </div>
+            <div class="crate-body">
+              <div class="crate-title-row"><h3>Special</h3><span class="crate-price">$2</span></div>
+              <p>Special tools, a gold block, a trident and more. For the loot goblins.</p>
+              <div class="crate-actions">
+                <button class="btn btn-primary btn-sm" type="button" data-add-crate="special" data-sound="buy">Add key</button>
+                <button class="link-btn" type="button" data-preview="special" data-sound="click">Preview <span aria-hidden="true">↗</span></button>
+              </div>
+            </div>
+          </article>
+
+          <article class="crate-card reveal" data-tilt style="--crate:#52e05a;--crate-deep:#145c19">
+            <div class="crate-visual">
+              <span class="crate-num">06</span>
+              <div class="cube-stage"><div class="cube-bob"><div class="cube">
+                <span class="face front"></span><span class="face back"></span><span class="face right"></span>
+                <span class="face left"></span><span class="face top"></span><span class="face bottom"></span>
+              </div></div></div>
+            </div>
+            <div class="crate-body">
+              <div class="crate-title-row"><h3>Keyall</h3><span class="crate-price">$2</span></div>
+              <p>The community crate. Hype up the lobby and spread the loot.</p>
+              <div class="crate-actions">
+                <button class="btn btn-primary btn-sm" type="button" data-add-crate="keyall" data-sound="buy">Add key</button>
+                <button class="link-btn" type="button" data-preview="keyall" data-sound="click">Preview <span aria-hidden="true">↗</span></button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <p class="crate-note reveal">Every key is $2. Every rank purchase includes 2 keys of your choice. Full reward details and odds are in the Discord.</p>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section how">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="kicker">How it works</div>
+            <h2>Three steps. <span class="red">No lore.</span></h2>
+          </div>
+          <p>Pick your loot, copy your order and finish it in a Discord ticket. Staff handle payment and delivery in-game.</p>
+        </div>
+
+        <div class="steps">
+          <div class="step reveal">
+            <span class="step-num">01</span>
+            <h3>Pick your loot</h3>
+            <p>Grab a rank or add crate keys. Ranks come with two keys of your choice.</p>
+          </div>
+          <div class="step reveal">
+            <span class="step-num">02</span>
+            <h3>Copy your order</h3>
+            <p>Hit checkout, enter your Minecraft username and copy the order summary.</p>
+          </div>
+          <div class="step reveal">
+            <span class="step-num">03</span>
+            <h3>Finish in Discord</h3>
+            <p>Open a ticket at discord.gg/outlawsmp, paste the order and get sorted.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REVIEWS -->
+    <section class="section reviews" id="reviews">
+      <div class="container reviews-grid">
+        <div class="reviews-intro reveal">
+          <div class="kicker">04 — Reviews</div>
+          <h2>What players <span class="red">say.</span></h2>
+          <p>Real vouches only. If you've bought a rank or cracked a crate, leave your MC name and a rating.</p>
+
+          <div class="rating-summary">
+            <div class="rating-big" id="avgRating">—</div>
+            <div>
+              <div class="stars stars-lg" id="avgStars" aria-hidden="true">☆☆☆☆☆</div>
+              <span class="rating-count" id="reviewCount">No reviews yet</span>
+            </div>
+          </div>
+
+          <div class="reviews-actions">
+            <button class="btn btn-primary" id="reviewOpen" type="button" data-sound="click">Leave a review</button>
+            <a class="link-btn" href="https://discord.gg/outlawsmp" target="_blank" rel="noopener" data-sound="click">or vouch in Discord <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+
+        <div class="reviews-panel reveal">
+          <div class="reviews-list" id="reviewsList"></div>
+
+          <form class="review-form" id="reviewForm" hidden>
+            <div class="form-head">
+              <h3>Leave a review</h3>
+              <button class="modal-close form-close" id="reviewCancel" type="button" aria-label="Close review form">×</button>
+            </div>
+            <label class="field">
+              <span>MC username</span>
+              <input id="reviewName" name="name" type="text" maxlength="16" minlength="3" pattern="[A-Za-z0-9_]{3,16}" placeholder="Your IGN" required autocomplete="username">
+            </label>
+            <div class="field">
+              <span>Rating</span>
+              <div class="star-input" id="starInput" role="radiogroup" aria-label="Star rating">
+                <button type="button" data-star="1" aria-label="1 star" aria-checked="false" role="radio">★</button>
+                <button type="button" data-star="2" aria-label="2 stars" aria-checked="false" role="radio">★</button>
+                <button type="button" data-star="3" aria-label="3 stars" aria-checked="false" role="radio">★</button>
+                <button type="button" data-star="4" aria-label="4 stars" aria-checked="false" role="radio">★</button>
+                <button type="button" data-star="5" aria-label="5 stars" aria-checked="false" role="radio">★</button>
+              </div>
+            </div>
+            <label class="field">
+              <span>Short review</span>
+              <textarea id="reviewText" name="text" maxlength="140" minlength="3" placeholder="How's the server? Keep it short." required></textarea>
+            </label>
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit" data-sound="click">Post review</button>
+              <button class="link-btn" id="reviewCancel2" type="button" data-sound="click">Cancel</button>
+            </div>
+            <p class="fine">Demo mode: reviews save in this browser only. Connect a backend to publish them for everyone.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section faq" id="faq">
+      <div class="container faq-grid">
+        <div class="faq-head reveal">
+          <div class="kicker">05 — FAQ</div>
+          <h2>Need to <span class="red">know?</span></h2>
+          <p>Anything else — prices, rewards, delivery, upgrades — just ask in Discord. That's the fastest way to get a real answer.</p>
+          <a class="btn btn-ghost" href="https://discord.gg/outlawsmp" target="_blank" rel="noopener" data-sound="click">discord.gg/outlawsmp <span class="arrow" aria-hidden="true">↗</span></a>
+        </div>
+
+        <div class="faq-list reveal">
+          <details>
+            <summary>What comes with each rank?</summary>
+            <p><strong>Prime ($1):</strong> Prime kit, Insta RTP, Insta Home, Insta Spawn, $50,000 in-game cash, 100 points and 2 crate keys of your choice. <strong>Outlaw+ ($5):</strong> Outlaw+ kit, Insta RTP, Insta Home, Insta Spawn, $300,000 in-game cash, 1,000 points and 2 crate keys of your choice.</p>
+          </details>
+          <details>
+            <summary>How do the 2 included keys work?</summary>
+            <p>Every rank purchase includes two keys. Use the key picker on the rank card to choose any two crate types. If you add a rank from the hero card, it defaults to Normal + Gold. You can fine-tune both keys from the cart before checkout — including setting both dropdowns to the same crate if that's what you're feeling.</p>
+          </details>
+          <details>
+            <summary>How much are crates?</summary>
+            <p>Every crate key is <strong>$2</strong> — Normal, Gold, Spawner, Seasonal, Special and Keyall. Add as many as you want to the cart; the price is per key.</p>
+          </details>
+          <details>
+            <summary>How do I receive my purchase?</summary>
+            <p>Add your items to the cart, hit checkout, enter your exact Minecraft username and copy the order. Then open a ticket in the Discord and paste it. Staff confirm payment and deliver your rank or keys in-game. Keep your DMs open in case they need you.</p>
+          </details>
+          <details>
+            <summary>How do I pay?</summary>
+            <p>Payment is arranged inside your Discord ticket. This site doesn't collect card details or take payment directly. Only pay through the method staff give you in the ticket.</p>
+          </details>
+          <details>
+            <summary>Can I upgrade from Prime to Outlaw+ later?</summary>
+            <p>Probably — open a ticket and staff will help you sort it out. They'll confirm the upgrade price and what carries over before you pay anything.</p>
+          </details>
+          <details>
+            <summary>I need more info about a crate or rank.</summary>
+            <p>Join <a href="https://discord.gg/outlawsmp" target="_blank" rel="noopener">discord.gg/outlawsmp</a> and ask. Reward lists, odds and delivery questions are all handled there.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+      <div class="container">
+        <div class="cta-box reveal">
+          <div class="cta-cards" aria-hidden="true"><span>A♦</span><span>Q♠</span></div>
+          <div class="kicker">Outlaw SMP</div>
+          <h2>Ready to run the <span class="red">server?</span></h2>
+          <p>Grab a rank, crack a crate, and pull up. Questions go to Discord.</p>
+          <div class="cta-actions">
+            <a class="btn btn-primary" href="#ranks" data-sound="click">Shop ranks <span class="arrow" aria-hidden="true">→</span></a>
+            <a class="btn btn-discord" href="https://discord.gg/outlawsmp" target="_blank" rel="noopener" data-sound="click">
+              <svg class="discord-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.3 5.4A16.7 16.7 0 0 0 15.2 4l-.5 1a15.4 15.4 0 0 0-5.4 0L8.8 4a16.7 16.7 0 0 0-4.1 1.4C2.1 9 1.4 12.5 1.7 16c1.7 1.3 3.4 2 5 2.4l1.1-1.7a10.8 10.8 0 0 1-1.7-.8l.4-.3a11.7 11.7 0 0 0 11 0l.4.3c-.5.3-1.1.6-1.7.8l1.1 1.7c1.6-.4 3.3-1.1 5-2.4.4-4.1-.7-7.6-3-10.6ZM8.7 13.8c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Zm6.6 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2Z"/></svg>
+              Join Discord
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="#top" aria-label="Back to top" data-sound="click"><img src="assets/logo.png" alt="Outlaw SMP" width="1100" height="621" loading="lazy"></a>
+        <p>Survive. Grind. Rule.</p>
+      </div>
+
+      <div class="footer-col">
+        <h3>Store</h3>
+        <a href="#ranks">Ranks</a>
+        <a href="#crates">Crates</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#faq">FAQ</a>
+      </div>
+
+      <div class="footer-col footer-discord">
+        <h3>Need info?</h3>
+        <p>Reward lists, delivery and payment questions are all answered in the Discord.</p>
+        <a class="btn btn-discord btn-sm" href="https://discord.gg/outlawsmp" target="_blank" rel="noopener" data-sound="click">discord.gg/outlawsmp</a>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <span>© 2026 Outlaw SMP. All rights reserved.</span>
+      <span>Not affiliated with Mojang Studios or Microsoft. Virtual in-game items only. Crate rewards are randomised.</span>
+    </div>
+  </footer>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-nav" id="mobileNav" role="dialog" aria-modal="true" aria-label="Menu" aria-hidden="true" hidden>
+    <div class="mobile-nav-head">
+      <img src="assets/logo.png" alt="Outlaw SMP" width="1100" height="621">
+      <button class="modal-close" id="mobileNavClose" type="button" aria-label="Close menu">×</button>
+    </div>
+    <nav aria-label="Mobile navigation">
+      <a href="#ranks" data-sound="tick">Ranks <span>01</span></a>
+      <a href="#crates" data-sound="tick">Crates <span>02</span></a>
+      <a href="#world" data-sound="tick">The SMP <span>03</span></a>
+      <a href="#reviews" data-sound="tick">Reviews <span>04</span></a>
+      <a href="#faq" data-sound="tick">FAQ <span>05</span></a>
+    </nav>
+    <a class="btn btn-discord" href="https://discord.gg/outlawsmp" target="_blank" rel="noopener" data-sound="click">Join the Discord <span class="arrow" aria-hidden="true">↗</span></a>
+    <p class="mobile-nav-note">Store questions? Open a ticket in Discord.</p>
+  </div>
+
+  <!-- CART -->
+  <div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
+  <aside class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-label="Shopping cart" aria-hidden="true" hidden>
+    <div class="cart-head">
+      <div>
+        <span class="kicker">Your loot</span>
+        <h2>Cart</h2>
+      </div>
+      <button class="modal-close" id="cartClose" type="button" aria-label="Close cart">×</button>
+    </div>
+    <div class="cart-body" id="cartBody"></div>
+    <div class="cart-foot">
+      <div class="cart-total"><span>Subtotal</span><strong id="cartTotal">$0.00</strong></div>
+      <p class="fine">Ranks include 2 keys of your choice. Crates are $2 per key.</p>
+      <button class="btn btn-primary btn-block" id="checkoutBtn" type="button" data-sound="click">Checkout <span class="arrow" aria-hidden="true">→</span></button>
+      <button class="link-btn clear-cart" id="clearCart" type="button" data-sound="click">Clear cart</button>
+    </div>
+  </aside>
+
+  <!-- MODAL -->
+  <div class="modal-backdrop" id="modalBackdrop" hidden></div>
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <button class="modal-close" id="modalClose" type="button" aria-label="Close dialog">×</button>
+    <div class="modal-content" id="modalContent"></div>
+  </div>
+
+  <div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="false"></div>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
